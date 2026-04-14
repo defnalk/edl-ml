@@ -1,0 +1,7 @@
+feature	importance(ΔMAE µF/cm²)
+log10_concentration_mol_l	2.2336
+valence	1.3079
+temperature_k	0.1320
+stern_thickness_ang	4.1532
+stern_permittivity	5.1368
+electrode_potential_v	1.9469
