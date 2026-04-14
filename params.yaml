@@ -1,0 +1,14 @@
+data:
+  n_samples: 1000
+  seed: 0
+
+train:
+  epochs: 200
+  lr: 1.0e-3
+  batch_size: 256
+  seed: 0
+  experiment: edl-ml
+
+tune:
+  n_trials: 40
+  timeout: 1800

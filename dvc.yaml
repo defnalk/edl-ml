@@ -1,0 +1,34 @@
+stages:
+  generate:
+    cmd: edl generate --n-samples ${data.n_samples} --seed ${data.seed} --output data/processed/dataset.parquet
+    deps:
+      - src/edl_ml/data
+      - src/edl_ml/physics
+    params:
+      - data.n_samples
+      - data.seed
+    outs:
+      - data/processed/dataset.parquet
+
+  train:
+    cmd: edl train --data data/processed/dataset.parquet --checkpoint data/models/model.pt --epochs ${train.epochs} --lr ${train.lr} --batch-size ${train.batch_size} --seed ${train.seed} --mlflow-experiment ${train.experiment}
+    deps:
+      - data/processed/dataset.parquet
+      - src/edl_ml/ml
+    params:
+      - train.epochs
+      - train.lr
+      - train.batch_size
+      - train.seed
+      - train.experiment
+    outs:
+      - data/models/model.pt
+
+  evaluate:
+    cmd: edl evaluate --checkpoint data/models/model.pt --data data/processed/dataset.parquet --figures-dir data/reports/figures
+    deps:
+      - data/models/model.pt
+      - data/processed/dataset.parquet
+      - src/edl_ml/viz
+    outs:
+      - data/reports/figures
