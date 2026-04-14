@@ -100,8 +100,8 @@ def plot_parity(
     """Parity (true-vs-predicted) scatter with diagonal reference."""
     fig, ax = plt.subplots(figsize=(5.2, 5.2))
     ax.scatter(y_true, y_pred, s=6, alpha=0.4, color="tab:blue")
-    lo = float(min(np.min(y_true), np.min(y_pred)))
-    hi = float(max(np.max(y_true), np.max(y_pred)))
+    lo = float(min(float(np.min(y_true)), float(np.min(y_pred))))
+    hi = float(max(float(np.max(y_true)), float(np.max(y_pred))))
     ax.plot([lo, hi], [lo, hi], color="k", linestyle="--", linewidth=1)
     ax.set_xlabel(f"True ({unit})")
     ax.set_ylabel(f"Predicted ({unit})")

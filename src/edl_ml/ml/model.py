@@ -92,7 +92,8 @@ class CapacitanceMLP(nn.Module):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Return the scaled capacitance prediction for input ``x``."""
-        return self.net(x)
+        out: torch.Tensor = self.net(x)
+        return out
 
     def count_parameters(self) -> int:
         """Number of trainable parameters."""

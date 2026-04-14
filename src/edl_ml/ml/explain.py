@@ -48,7 +48,7 @@ def _predict_unscaled(
         xt = x_scaler.transform(xt)
         out = model(xt)
         out = y_scaler.inverse_transform(out)
-    return out.cpu().numpy().ravel()
+    return np.asarray(out.cpu().numpy().ravel(), dtype=np.float64)
 
 
 def shap_explain(
@@ -81,7 +81,7 @@ def shap_explain(
     ShapResult
         Results in unscaled output units.
     """
-    import shap  # type: ignore[import-not-found]
+    import shap
 
     def f(x: NDArray[np.float64]) -> NDArray[np.float64]:
         return _predict_unscaled(model, x, x_scaler, y_scaler)

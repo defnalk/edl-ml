@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from collections.abc import Iterable
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from dataclasses import dataclass
 from pathlib import Path
@@ -254,9 +253,3 @@ __all__ = [
     "split_by_sample",
     "summarise_dataset",
 ]
-
-
-def _ensure_iterable(x: float | Iterable[float]) -> Iterable[float]:  # pragma: no cover
-    if hasattr(x, "__iter__"):
-        return x  # type: ignore[return-value]
-    return [x]  # type: ignore[return-value]

@@ -10,6 +10,7 @@ from pathlib import Path
 
 import numpy as np
 import torch
+from numpy.typing import NDArray
 from torch import nn
 from torch.optim.lr_scheduler import CosineAnnealingLR
 from torch.utils.data import DataLoader
@@ -148,8 +149,8 @@ def _evaluate_unscaled(
 ) -> dict[str, float]:
     """Compute regression metrics on unscaled capacitance (µF/cm²)."""
     model.eval()
-    preds: list[np.ndarray] = []
-    trues: list[np.ndarray] = []
+    preds: list[NDArray[np.float32]] = []
+    trues: list[NDArray[np.float32]] = []
     with torch.no_grad():
         for x, y in loader:
             x = x.to(device)

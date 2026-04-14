@@ -16,11 +16,7 @@ from typing import Final
 
 import numpy as np
 from numpy.typing import NDArray
-
-try:
-    from pyDOE2 import lhs
-except ImportError:  # pragma: no cover - fallback for local tests
-    lhs = None  # type: ignore[assignment]
+from scipy.stats import qmc
 
 FEATURE_COLUMNS: Final[tuple[str, ...]] = (
     "log10_concentration_mol_l",
@@ -91,19 +87,11 @@ def latin_hypercube_samples(
         rounded to an element of ``bounds.valence_choices`` after uniform
         sampling on ``[0, 1]``.
     """
-    rng = np.random.default_rng(seed)
     if n_samples < 1:
         raise ValueError("n_samples must be positive")
 
-    if lhs is not None:
-        unit = lhs(5, samples=n_samples, random_state=seed)
-    else:
-        # Deterministic LHS fallback so tests do not depend on pyDOE2.
-        unit = np.zeros((n_samples, 5))
-        for dim in range(5):
-            perm = rng.permutation(n_samples)
-            u = rng.uniform(0.0, 1.0, size=n_samples)
-            unit[:, dim] = (perm + u) / n_samples
+    sampler = qmc.LatinHypercube(d=5, seed=seed)
+    unit = np.asarray(sampler.random(n=n_samples), dtype=np.float64)
 
     samples = np.zeros_like(unit)
     samples[:, 0] = bounds.log10_concentration_min + unit[:, 0] * (
@@ -124,4 +112,4 @@ def latin_hypercube_samples(
     samples[:, 4] = bounds.stern_permittivity_min + unit[:, 4] * (
         bounds.stern_permittivity_max - bounds.stern_permittivity_min
     )
-    return samples
+    return np.asarray(samples, dtype=np.float64)

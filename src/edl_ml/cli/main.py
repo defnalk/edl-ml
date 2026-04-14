@@ -15,6 +15,7 @@ from collections.abc import Sequence
 from pathlib import Path
 
 import numpy as np
+from numpy.typing import NDArray
 
 from edl_ml._version import __version__
 
@@ -222,16 +223,16 @@ def _cmd_evaluate(args: argparse.Namespace) -> int:
 
     # Parity + error dist on test split.
     model.eval()
-    preds: list[np.ndarray] = []
-    trues: list[np.ndarray] = []
+    preds: list[NDArray[np.float32]] = []
+    trues: list[NDArray[np.float32]] = []
     with torch.no_grad():
         for x, y in loaders.test:
             p = loaders.y_scaler.inverse_transform(model(x.to(device)).cpu()).numpy()
             t = loaders.y_scaler.inverse_transform(y).numpy()
             preds.append(p)
             trues.append(t)
-    y_pred = np.concatenate(preds).ravel()
-    y_true = np.concatenate(trues).ravel()
+    y_pred = np.concatenate(preds).ravel().astype(np.float64)
+    y_true = np.concatenate(trues).ravel().astype(np.float64)
     fig_p = plot_parity(y_true, y_pred, title="Test parity (µF/cm²)")
     fig_e = plot_error_distribution(y_true, y_pred, title="Test residuals (µF/cm²)")
     fig_p.savefig(args.figures_dir / "parity_test.png", dpi=200)

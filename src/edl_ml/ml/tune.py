@@ -101,7 +101,7 @@ def run_optuna_study(
     optuna.Study
         The completed study; best trial accessible via ``.best_trial``.
     """
-    import optuna  # type: ignore[import-not-found]
+    import optuna
 
     base = base_train_config or TrainConfig(
         max_epochs=tune_config.max_epochs,
